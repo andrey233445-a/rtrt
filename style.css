@@ -3247,6 +3247,11 @@ html {
 /* ===== ИДЕАЛЬНАЯ МОБИЛЬНАЯ АДАПТИВНОСТЬ ===== */
 
 /* Мобильная шапка */
+/* Убираем отступ между шапкой и картинкой в десктопной версии */
+
+
+
+
 .mobile-header {
     position: fixed;
     top: 0;
@@ -3697,3 +3702,298 @@ html {
         background-color: #2a2a2a;
     }
 }
+/* ===== ДОПОЛНИТЕЛЬНЫЕ СТИЛИ ДЛЯ МОБИЛЬНОЙ АДАПТАЦИИ ===== */
+
+/* Жесткие ограничения для мобильных */
+@media (max-width: 768px) {
+    * {
+        max-width: 100% !important;
+        box-sizing: border-box !important;
+    }
+    
+    html, body {
+        width: 100% !important;
+        overflow-x: hidden !important;
+        position: relative;
+    }
+    
+    body {
+        padding-top: 60px !important;
+    }
+    
+    /* Контейнеры */
+    .container, 
+    .content-section, 
+    .portfolio-section,
+    .order-process-section,
+    .about-section,
+    .contact-section {
+        padding-left: 15px !important;
+        padding-right: 15px !important;
+        margin-left: 0 !important;
+        margin-right: 0 !important;
+        width: 100% !important;
+    }
+    
+    /* Изображения */
+    img, video, iframe, object, embed {
+        max-width: 100% !important;
+        height: auto !important;
+    }
+    
+    /* Таблицы */
+    table {
+        width: 100% !important;
+        display: block !important;
+        overflow-x: auto !important;
+    }
+    
+    /* Специфичные исправления */
+    .hero-content {
+        padding: 0 15px !important;
+    }
+    
+    .blocks-container {
+        margin: 0 !important;
+    }
+    
+    .content-block {
+        margin: 0 0 15px 0 !important;
+    }
+    
+    /* Убираем фиксированные ширины */
+    .calculator-content,
+    .modal-content {
+        width: 95% !important;
+        max-width: 95% !important;
+        margin: 10px auto !important;
+    }
+}
+
+/* Маленькие экраны */
+@media (max-width: 480px) {
+    .hero-title {
+        font-size: 22px !important;
+    }
+    
+    .hero-subtitle {
+        font-size: 14px !important;
+    }
+    
+    .section-title {
+        font-size: 20px !important;
+    }
+    
+    .content-block {
+        padding: 15px !important;
+    }
+}
+/* Скрываем кнопки на мобилках */
+@media (max-width: 768px) {
+  /* Большие серые кнопки в основном хедере */
+  header.main-header .header-actions {
+    display: none !important;
+  }
+  
+  /* Кнопки в хиро-секции */
+  section.hero-section .hero-buttons {
+    display: none !important;
+  }
+  
+  /* И новые кнопки "Калькулятор" и "Звонок" в .new-header */
+  .new-header .new-actions {
+    display: none !important;
+  }
+}
+@media (max-width: 768px) {
+  .new-header {
+    display: none !important;
+  }
+}
+/* Убираем лишний отступ между шапкой и хиро-секцией */
+@media (max-width: 768px) {
+  /* Если есть .new-header — скрываем полностью */
+  .new-header {
+    display: none !important;
+  }
+  
+  /* Убираем отступы у хиро-секции */
+  .hero-section {
+    margin-top: -20px !important;  /* Поднимаем секцию выше */
+    padding-top: 0 !important;
+  }
+  
+  /* Можно также убрать отступ у main-header */
+  .main-header {
+    margin-bottom: 0 !important;
+    padding-bottom: 10px !important;
+  }
+}
+/* Уменьшаем стрелочки и индикаторы в мобильной версии */
+@media screen and (max-width: 768px) {
+  /* СТРЕЛОЧКИ */
+  .partner-nav-btn {
+    width: 30px !important;
+    height: 30px !important;
+    font-size: 14px !important;
+    min-width: 30px !important;
+    min-height: 30px !important;
+    line-height: 30px !important;
+  }
+  
+  /* КРУЖКИ-ИНДИКАТОРЫ */
+  .partner-indicator {
+    width: 6px !important;
+    height: 6px !important;
+    min-width: 6px !important;
+    min-height: 6px !important;
+    margin: 0 3px !important;
+  }
+  
+  /* Контейнер индикаторов */
+  .partner-indicators {
+    bottom: 5px !important;
+    gap: 4px !important;
+  }
+  
+  /* Карусель клиентов */
+  .partners-carousel-box {
+    padding: 10px !important;
+  }
+}
+@media screen and (max-width: 768px) {
+  /* Смещаем стрелочки ближе к центру */
+  .partners-carousel-box {
+    position: relative;
+    padding-left: 15px !important;
+    padding-right: 15px !important;
+  }
+  
+  .partner-nav-btn.partner-prev {
+    left: 5px !important;  /* Левая стрелочка ближе к центру */
+  }
+  
+  .partner-nav-btn.partner-next {
+    right: 5px !important; /* Правая стрелочка ближе к центру */
+  }
+}
+/* Только для ДЕСКТОПА (ширина больше 768px) */
+@media screen and (min-width: 769px) {
+  /* Убираем отступ между шапкой и картинкой ТОЛЬКО на десктопе */
+  .hero-section {
+    margin-top: -10px !important; /* или 0, или другое значение */
+  }
+  
+  .new-header {
+    display: none !important;
+  }
+}
+
+/* Только для МОБИЛКИ (ширина до 768px) */
+@media screen and (max-width: 768px) {
+  /* Оставляем нормальный отступ на мобилках */
+  .hero-section {
+    margin-top: 0 !important; /* или 10px, 20px — как нужно */
+  }
+  
+  .new-header {
+    display: none !important;
+  }
+}
+/* ================================================== */
+/* ФИНАЛЬНЫЙ ФИКС ОТСТУПОВ - ВСТАВИТЬ В КОНЕЦ ФАЙЛА */
+/* ================================================== */
+
+/* Скрываем ненужный блок с дублирующим логотипом */
+.new-header {
+    display: none !important;
+}
+
+/* НА КОМПЬЮТЕРАХ (ширина больше 768px) */
+@media screen and (min-width: 769px) {
+    .hero-section {
+        margin-top: 0 !important;       /* Картинка сразу под шапкой */
+        padding-top: 0 !important;
+    }
+    
+    .main-header {
+        margin-bottom: 0 !important;
+        padding-bottom: 10px !important;
+    }
+    
+    body {
+        padding-top: 0 !important;
+    }
+}
+
+/* НА ТЕЛЕФОНАХ (ширина до 768px) */
+@media screen and (max-width: 768px) {
+    .hero-section {
+        margin-top:  0 !important;    /* Нормальный отступ сверху */
+        padding-top: 0 !important;
+        height: calc(100vh - 80px) !important;
+    }
+    
+    body {
+        padding-top: 60px !important;
+    }
+    
+    /* Мобильная шапка */
+    .mobile-header {
+        display: flex !important;
+    }
+    
+    /* Десктопная шапка скрыта */
+    .main-header {
+        display: none !important;
+    }
+    
+    /* Кнопки в хиро-секции скрыты */
+    .hero-buttons {
+        display: none !important;
+    }
+    
+    /* Кнопки в основной шапке скрыты */
+    .header-actions {
+        display: none !important;
+    }
+}
+
+/* Стрелочки и индикаторы карусели на мобилках */
+@media screen and (max-width: 768px) {
+    .partner-nav-btn {
+        width: 30px !important;
+        height: 30px !important;
+        font-size: 14px !important;
+        min-width: 30px !important;
+        min-height: 30px !important;
+        line-height: 30px !important;
+    }
+    
+    .partner-nav-btn.partner-prev {
+        left: 5px !important;
+    }
+    
+    .partner-nav-btn.partner-next {
+        right: 5px !important;
+    }
+    
+    .partner-indicator {
+        width: 6px !important;
+        height: 6px !important;
+        min-width: 6px !important;
+        min-height: 6px !important;
+        margin: 0 3px !important;
+    }
+    
+    .partner-indicators {
+        bottom: 5px !important;
+        gap: 4px !important;
+    }
+    
+    .partners-carousel-box {
+        padding: 10px !important;
+        padding-left: 15px !important;
+        padding-right: 15px !important;
+    }
+}   

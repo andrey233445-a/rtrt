@@ -1,116 +1,6 @@
-// ===================== УЛУЧШЕННЫЙ JS =====================
+// ===================== ОСНОВНОЙ JS ФАЙЛ =====================
 
-// ===== МОБИЛЬНАЯ ШАПКА =====
-function initMobileHeader() {
-    const mobileMenuBtn = document.getElementById('mobileMenuBtn');
-    const mobileMenuClose = document.getElementById('mobileMenuClose');
-    const mobileMenu = document.getElementById('mobileMenu');
-    const mobileMenuOverlay = document.getElementById('mobileMenuOverlay');
-    const mobileNavLinks = document.querySelectorAll('.mobile-nav a');
-    const mobileHeader = document.getElementById('mobileHeader');
-    const mainHeader = document.getElementById('mainHeader');
-    const topBanner = document.getElementById('topBanner');
-
-    // Проверяем, существуют ли элементы
-    if (!mobileMenuBtn || !mobileMenu) {
-        console.warn('Элементы мобильного меню не найдены');
-        return;
-    }
-
-    // Открытие мобильного меню
-    mobileMenuBtn.addEventListener('click', () => {
-        mobileMenu.classList.add('show');
-        mobileMenuOverlay.classList.add('show');
-        document.body.style.overflow = 'hidden';
-    });
-
-    // Закрытие мобильного меню
-    function closeMobileMenu() {
-        mobileMenu.classList.remove('show');
-        mobileMenuOverlay.classList.remove('show');
-        document.body.style.overflow = 'auto';
-    }
-
-    if (mobileMenuClose) {
-        mobileMenuClose.addEventListener('click', closeMobileMenu);
-    }
-    
-    if (mobileMenuOverlay) {
-        mobileMenuOverlay.addEventListener('click', closeMobileMenu);
-    }
-
-    // Закрытие меню при клике на ссылку
-    mobileNavLinks.forEach(link => {
-        link.addEventListener('click', (e) => {
-            const href = link.getAttribute('href');
-            
-            if (href && href.startsWith('#')) {
-                e.preventDefault();
-                const targetId = href;
-                const targetElement = document.querySelector(targetId);
-                if (targetElement) {
-                    const offset = window.innerWidth <= 768 ? 80 : 100;
-                    const targetPosition = targetElement.getBoundingClientRect().top + window.pageYOffset - offset;
-                    
-                    window.scrollTo({
-                        top: targetPosition,
-                        behavior: 'smooth'
-                    });
-                }
-            }
-            closeMobileMenu();
-        });
-    });
-
-    // Скрытие шапки при скролле (только для мобильных)
-    let lastScrollTop = 0;
-    const scrollThreshold = 100;
-
-    window.addEventListener('scroll', () => {
-        if (window.innerWidth > 768) return; // Только для мобильных
-        
-        const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
-        
-        if (scrollTop > lastScrollTop && scrollTop > scrollThreshold) {
-            // Скролл вниз - скрываем
-            mobileHeader.style.transform = 'translateY(-100%)';
-        } else {
-            // Скролл вверх - показываем
-            mobileHeader.style.transform = 'translateY(0)';
-        }
-        lastScrollTop = scrollTop <= 0 ? 0 : scrollTop;
-    });
-
-    // Переключение между мобильной и десктопной шапкой
-    function checkViewport() {
-        const isMobile = window.innerWidth <= 768;
-        
-        if (isMobile) {
-            // Мобильный вид
-            if (mainHeader) mainHeader.style.display = 'none';
-            if (topBanner) topBanner.style.display = 'none';
-            if (mobileHeader) mobileHeader.style.display = 'flex';
-        } else {
-            // Десктопный вид
-            if (mainHeader) mainHeader.style.display = 'flex';
-            if (topBanner) topBanner.style.display = 'flex';
-            if (mobileHeader) mobileHeader.style.display = 'none';
-            closeMobileMenu();
-        }
-    }
-
-    // Дебаунс ресайза для оптимизации
-    let resizeTimeout;
-    window.addEventListener('resize', () => {
-        clearTimeout(resizeTimeout);
-        resizeTimeout = setTimeout(checkViewport, 150);
-    });
-    
-    // Инициализация
-    checkViewport();
-}
-
-// ===== ДИНАМИЧЕСКИЕ СТИЛИ ДЛЯ МОБИЛЬНОЙ АДАПТИВНОСТИ =====
+// ===== МОБИЛЬНАЯ АДАПТАЦИЯ =====
 function addMobileStyles() {
     const style = document.createElement('style');
     style.id = 'mobile-styles';
@@ -122,38 +12,36 @@ function addMobileStyles() {
             left: 0;
             width: 100%;
             height: 60px;
-            background-color: rgba(255, 255, 255, 0.98);
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
+            background: white;
             display: none;
             align-items: center;
             justify-content: space-between;
             padding: 0 16px;
             z-index: 9999;
-            box-shadow: 0 2px 15px rgba(0,0,0,0.1);
-            border-bottom: 1px solid #e9ecef;
-            transition: transform 0.3s ease;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            border-bottom: 1px solid #eee;
         }
 
         .mobile-logo {
-            font-size: 20px;
+            font-size: 18px;
             font-weight: 700;
             color: #333;
             display: flex;
             align-items: center;
             gap: 8px;
+            white-space: nowrap;
         }
 
         .mobile-logo-img {
-            width: 32px;
-            height: 32px;
+            width: 30px;
+            height: 30px;
             object-fit: contain;
         }
 
         .mobile-menu-btn {
             background: none;
             border: none;
-            font-size: 24px;
+            font-size: 22px;
             color: #333;
             cursor: pointer;
             width: 44px;
@@ -161,12 +49,6 @@ function addMobileStyles() {
             display: flex;
             align-items: center;
             justify-content: center;
-            border-radius: 8px;
-            transition: all 0.3s;
-        }
-
-        .mobile-menu-btn:hover {
-            background-color: #f8f9fa;
         }
 
         /* Мобильное меню */
@@ -176,116 +58,91 @@ function addMobileStyles() {
             left: 0;
             width: 100%;
             height: 100%;
-            background-color: rgba(0,0,0,0.5);
+            background: rgba(0,0,0,0.5);
             z-index: 10000;
             display: none;
-            opacity: 0;
-            transition: opacity 0.3s;
+        }
+
+        .mobile-menu-overlay.show {
+            display: block;
         }
 
         .mobile-menu {
             position: fixed;
             top: 0;
             right: -100%;
-            width: 85%;
-            max-width: 320px;
+            width: 280px;
             height: 100%;
             background: white;
             z-index: 10001;
-            transition: right 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            transition: right 0.3s;
             overflow-y: auto;
-            padding: 80px 24px 40px;
-            box-shadow: -5px 0 25px rgba(0,0,0,0.15);
+            padding: 70px 20px 30px;
         }
 
         .mobile-menu.show {
             right: 0;
         }
 
-        .mobile-menu-overlay.show {
-            display: block;
-            opacity: 1;
-        }
-
         .mobile-menu-close {
             position: absolute;
-            top: 20px;
-            right: 20px;
+            top: 15px;
+            right: 15px;
             background: none;
             border: none;
-            font-size: 24px;
+            font-size: 22px;
             color: #333;
             cursor: pointer;
-            width: 44px;
-            height: 44px;
+            width: 40px;
+            height: 40px;
             display: flex;
             align-items: center;
             justify-content: center;
-            border-radius: 50%;
-            transition: all 0.3s;
-        }
-
-        .mobile-menu-close:hover {
-            background-color: #f8f9fa;
         }
 
         .mobile-nav {
             display: flex;
             flex-direction: column;
-            gap: 8px;
-            margin-bottom: 30px;
+            gap: 5px;
+            margin-bottom: 25px;
         }
 
         .mobile-nav a {
             display: flex;
             align-items: center;
-            padding: 16px 20px;
+            padding: 12px 16px;
             color: #333;
             text-decoration: none;
-            font-size: 16px;
-            font-weight: 500;
-            border-radius: 12px;
-            transition: all 0.3s;
+            font-size: 15px;
+            border-radius: 8px;
         }
 
-        .mobile-nav a:hover,
-        .mobile-nav a.active {
-            background-color: #e3f2fd;
-            color: #007bff;
+        .mobile-nav a:hover {
+            background: #f5f5f5;
         }
 
         .mobile-nav i {
-            width: 24px;
-            margin-right: 12px;
-            font-size: 18px;
+            width: 20px;
+            margin-right: 10px;
+            font-size: 16px;
         }
 
         .mobile-actions {
             display: flex;
             flex-direction: column;
             gap: 12px;
-            padding-top: 20px;
-            border-top: 1px solid #eee;
         }
 
         .mobile-phone {
-            text-align: center;
-            padding: 16px;
-            background: linear-gradient(135deg, #007bff, #0056b3);
+            display: block;
+            padding: 12px;
+            background: #007bff;
             color: white;
-            border-radius: 12px;
+            border-radius: 8px;
             text-decoration: none;
             font-weight: 600;
-            font-size: 18px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-            margin-bottom: 10px;
-        }
-
-        .mobile-phone i {
-            font-size: 20px;
+            font-size: 16px;
+            text-align: center;
         }
 
         .mobile-buttons {
@@ -295,170 +152,163 @@ function addMobileStyles() {
         }
 
         .mobile-btn {
-            padding: 16px;
-            border-radius: 12px;
+            padding: 12px;
+            border-radius: 8px;
             border: none;
-            font-size: 16px;
+            font-size: 15px;
             font-weight: 600;
             cursor: pointer;
-            text-align: center;
-            transition: all 0.3s;
         }
 
         .mobile-btn-calc {
-            background: linear-gradient(135deg, #007bff, #0056b3);
+            background: #007bff;
             color: white;
-            box-shadow: 0 4px 15px rgba(0, 123, 255, 0.3);
-        }
-
-        .mobile-btn-calc:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(0, 123, 255, 0.4);
         }
 
         .mobile-btn-call {
-            background-color: white;
+            background: white;
             color: #007bff;
             border: 2px solid #007bff;
         }
 
-        .mobile-btn-call:hover {
-            background-color: #007bff;
-            color: white;
-        }
-
-        /* Адаптация верхнего баннера */
+        /* АДАПТАЦИЯ ДЛЯ МОБИЛЬНЫХ */
         @media (max-width: 768px) {
-            .top-banner {
-                display: none !important;
-            }
-            
-            .mobile-header {
-                display: flex !important;
-            }
-            
-            /* Адаптируем основную шапку */
+            /* Скрываем лишнее */
+            .top-banner,
             .main-header {
                 display: none !important;
             }
             
-            /* Корректируем отступы для героя */
+            /* Показываем мобильную шапку */
+            .mobile-header {
+                display: flex !important;
+            }
+            
+            /* Герой секция */
             .hero-section {
-                margin-top: 60px;
-                border-radius: 0;
-                height: calc(100vh - 60px);
-                min-height: 500px;
+                margin-top: 60px !important;
+                padding: 30px 15px !important;
+                min-height: 500px !important;
+                height: auto !important;
             }
             
             .hero-title {
-                font-size: 32px;
-                line-height: 1.3;
-                padding: 0 10px;
+                font-size: 24px !important;
+                line-height: 1.3 !important;
+                margin-bottom: 15px !important;
+                padding: 0 !important;
             }
             
             .hero-subtitle {
-                font-size: 18px;
-                padding: 0 15px;
+                font-size: 15px !important;
+                margin-bottom: 25px !important;
+                line-height: 1.4 !important;
+                padding: 0 !important;
             }
             
             .hero-buttons {
-                flex-direction: column;
-                width: 100%;
-                max-width: 280px;
-                margin: 0 auto;
+                flex-direction: column !important;
+                gap: 10px !important;
+                width: 100% !important;
+                padding: 0 !important;
             }
             
             .hero-buttons .btn {
-                width: 100%;
-                justify-content: center;
-                padding: 16px;
+                width: 100% !important;
+                max-width: 100% !important;
+                padding: 12px !important;
+                font-size: 14px !important;
+                margin: 0 !important;
             }
             
-            /* Отступ для якорных ссылок */
-            html {
-                scroll-padding-top: 70px;
+            /* Блоки контента */
+            .content-section {
+                padding: 40px 15px !important;
             }
             
-            /* Улучшения для touch-устройств */
-            button,
-            a.btn,
-            .content-block,
+            .section-title {
+                font-size: 22px !important;
+                margin-bottom: 25px !important;
+                padding: 0 10px !important;
+            }
+            
+            .blocks-container {
+                grid-template-columns: 1fr !important;
+                gap: 15px !important;
+                padding: 0 !important;
+            }
+            
+            .content-block {
+                padding: 20px !important;
+                margin: 0 !important;
+                width: 100% !important;
+            }
+            
+            .block-icon {
+                width: 50px !important;
+                height: 50px !important;
+                font-size: 20px !important;
+            }
+            
+            .block-title {
+                font-size: 17px !important;
+            }
+            
+            .block-text {
+                font-size: 14px !important;
+                line-height: 1.4 !important;
+            }
+            
+            /* Портфолио */
+            .portfolio-section {
+                padding: 40px 15px !important;
+            }
+            
             .portfolio-item {
-                min-height: 48px;
-                min-width: 48px;
+                height: 180px !important;
             }
             
-            .form-control,
-            select,
-            input,
-            textarea {
-                font-size: 16px !important;
-                padding: 15px;
+            /* Процесс работы */
+            .order-process-section {
+                padding: 40px 15px !important;
+            }
+            
+            .process-step {
+                padding: 20px !important;
+            }
+            
+            /* Футер */
+            .footer-content {
+                padding: 30px 15px !important;
+            }
+            
+            .footer-info-grid {
+                grid-template-columns: 1fr !important;
+                gap: 20px !important;
+            }
+            
+            /* Общие исправления */
+            * {
+                max-width: 100% !important;
+            }
+            
+            body {
+                overflow-x: hidden !important;
+                width: 100% !important;
+            }
+            
+            section, div, .container {
+                max-width: 100% !important;
+                overflow-x: hidden !important;
             }
         }
 
-        /* Адаптация для очень маленьких экранов */
-        @media (max-width: 480px) {
-            .mobile-header {
-                height: 56px;
-                padding: 0 12px;
-            }
-            
-            .mobile-logo {
-                font-size: 18px;
-            }
-            
-            .mobile-logo-img {
-                width: 28px;
-                height: 28px;
-            }
-            
-            .mobile-menu-btn {
-                width: 40px;
-                height: 40px;
-                font-size: 22px;
-            }
-            
-            .hero-title {
-                font-size: 28px;
-            }
-            
-            .hero-subtitle {
-                font-size: 16px;
-            }
-        }
-
-        /* Ландшафтная ориентация */
-        @media (max-width: 768px) and (orientation: landscape) {
-            .hero-section {
-                height: auto;
-                min-height: 100vh;
-                padding: 80px 0 40px;
-            }
-            
-            .mobile-menu {
-                padding: 60px 24px 20px;
-            }
-            
-            .mobile-nav {
-                max-height: 60vh;
-                overflow-y: auto;
-            }
-        }
-
+        /* Десктоп */
         @media (min-width: 769px) {
             .mobile-header,
             .mobile-menu-overlay,
             .mobile-menu {
                 display: none !important;
-            }
-            
-            .main-header {
-                display: flex !important;
-            }
-            
-            .top-banner {
-                display: flex !important;
             }
         }
     `;
@@ -470,6 +320,53 @@ function addMobileStyles() {
     }
     
     document.head.appendChild(style);
+    console.log('Мобильные стили добавлены');
+}
+
+// ===== МОБИЛЬНОЕ МЕНЮ =====
+function initMobileMenu() {
+    const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+    const mobileMenuClose = document.getElementById('mobileMenuClose');
+    const mobileMenu = document.getElementById('mobileMenu');
+    const mobileMenuOverlay = document.getElementById('mobileMenuOverlay');
+    
+    if (!mobileMenuBtn || !mobileMenu) {
+        console.log('Элементы мобильного меню не найдены');
+        return;
+    }
+    
+    console.log('Инициализация мобильного меню...');
+    
+    // Открытие меню
+    mobileMenuBtn.addEventListener('click', () => {
+        console.log('Открытие меню');
+        mobileMenu.classList.add('show');
+        mobileMenuOverlay.classList.add('show');
+        document.body.style.overflow = 'hidden';
+    });
+    
+    // Закрытие меню
+    function closeMobileMenu() {
+        console.log('Закрытие меню');
+        mobileMenu.classList.remove('show');
+        mobileMenuOverlay.classList.remove('show');
+        document.body.style.overflow = 'auto';
+    }
+    
+    if (mobileMenuClose) {
+        mobileMenuClose.addEventListener('click', closeMobileMenu);
+    }
+    
+    if (mobileMenuOverlay) {
+        mobileMenuOverlay.addEventListener('click', closeMobileMenu);
+    }
+    
+    // Закрытие при клике на ссылки
+    document.querySelectorAll('.mobile-nav a').forEach(link => {
+        link.addEventListener('click', closeMobileMenu);
+    });
+    
+    console.log('Мобильное меню инициализировано');
 }
 
 // ===== КАЛЬКУЛЯТОР =====
@@ -478,6 +375,7 @@ function openCalculator() {
     if (modal) {
         modal.style.display = 'flex';
         document.body.style.overflow = 'hidden';
+        console.log('Калькулятор открыт');
     }
 }
 
@@ -486,6 +384,7 @@ function closeCalculator() {
     if (modal) {
         modal.style.display = 'none';
         document.body.style.overflow = 'auto';
+        console.log('Калькулятор закрыт');
     }
 }
 
@@ -495,6 +394,7 @@ function openCallForm() {
     if (modal) {
         modal.style.display = 'flex';
         document.body.style.overflow = 'hidden';
+        console.log('Форма звонка открыта');
     }
 }
 
@@ -503,56 +403,34 @@ function closeCallForm() {
     if (modal) {
         modal.style.display = 'none';
         document.body.style.overflow = 'auto';
+        console.log('Форма звонка закрыта');
     }
 }
 
-// Закрытие модалок по клику вне
+// ===== ЗАКРЫТИЕ МОДАЛОК =====
 function initModalClose() {
     window.addEventListener('click', function(event) {
         const callModal = document.getElementById('callModal');
         const calculatorModal = document.getElementById('calculatorModal');
         
-        if (event.target === callModal) closeCallForm();
-        if (event.target === calculatorModal) closeCalculator();
+        if (event.target === callModal) {
+            closeCallForm();
+        }
+        if (event.target === calculatorModal) {
+            closeCalculator();
+        }
+    });
+    
+    // Закрытие по ESC
+    document.addEventListener('keydown', function(event) {
+        if (event.key === 'Escape') {
+            closeCallForm();
+            closeCalculator();
+        }
     });
 }
 
-// ===== ОБРАБОТКА ФОРМ =====
-function initForms() {
-    // Форма звонка
-    const callForm = document.getElementById('callForm');
-    if (callForm) {
-        callForm.addEventListener('submit', function(e) {
-            e.preventDefault();
-            
-            const submitBtn = this.querySelector('.submit-btn');
-            if (!submitBtn) return;
-            
-            const originalHTML = submitBtn.innerHTML;
-            const originalBg = submitBtn.style.background;
-            
-            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Отправка...';
-            submitBtn.disabled = true;
-            
-            // Имитация отправки
-            setTimeout(() => {
-                submitBtn.innerHTML = '<i class="fas fa-check"></i> Отправлено!';
-                submitBtn.style.background = 'linear-gradient(135deg, #10b981, #059669)';
-                
-                // Сброс формы через 2 секунды
-                setTimeout(() => {
-                    this.reset();
-                    submitBtn.innerHTML = originalHTML;
-                    submitBtn.disabled = false;
-                    submitBtn.style.background = originalBg;
-                    closeCallForm();
-                }, 2000);
-            }, 1500);
-        });
-    }
-}
-
-// ===== КАЛЬКУЛЯТОР РАСЧЕТА =====
+// ===== ОБНОВЛЕНИЕ КАЛЬКУЛЯТОРА =====
 function updateService() {
     const service = document.getElementById('serviceType')?.value;
     const areaSection = document.getElementById('areaSection');
@@ -563,18 +441,23 @@ function updateService() {
 
     if (!service || !areaSection) return;
 
+    // Скрываем все секции
     areaSection.style.display = 'none';
-    materialSection.style.display = 'none';
-    additionalServices.style.display = 'none';
-
+    if (materialSection) materialSection.style.display = 'none';
+    if (additionalServices) additionalServices.style.display = 'none';
+    
+    // Очищаем опции
     if (materialOptions) materialOptions.innerHTML = '';
     if (serviceList) serviceList.innerHTML = '';
 
-    switch(service) {
-        case 'repair-apartment':
-            areaSection.style.display = 'block';
-            if (serviceList) {
-                serviceList.innerHTML = `
+    // Показываем нужные секции
+    if (service === 'repair-apartment' || service === 'euro-repair' || service === 'office-repair') {
+        areaSection.style.display = 'block';
+        
+        if (serviceList && additionalServices) {
+            let html = '';
+            if (service === 'repair-apartment') {
+                html = `
                     <div class="checkbox-item">
                         <input type="checkbox" id="extra-sanuzel" name="sanuzel">
                         <label for="extra-sanuzel">Санузел</label>
@@ -584,14 +467,27 @@ function updateService() {
                         <label for="extra-electrical">Электромонтажные работы</label>
                     </div>
                 `;
-            }
-            if (additionalServices) additionalServices.style.display = 'block';
-            break;
-
-        case 'euro-repair':
-            areaSection.style.display = 'block';
-            if (serviceList) {
-                serviceList.innerHTML = `
+            } else if (service === 'euro-repair') {
+                html = `
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="extra-sanuzel" name="sanuzel">
+                        <label for="extra-sanuzel">Санузел</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="extra-electrical" name="electrical">
+                        <label for="extra-electrical">Электромонтажные работы</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="extra-replanning" name="replanning">
+                        <label for="extra-replanning">Перепланировка</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="extra-heating" name="heating">
+                        <label for="extra-heating">Отопление</label>
+                    </div>
+                `;
+            } else if (service === 'office-repair') {
+                html = `
                     <div class="checkbox-item">
                         <input type="checkbox" id="extra-sanuzel" name="sanuzel">
                         <label for="extra-sanuzel">Санузел</label>
@@ -610,48 +506,26 @@ function updateService() {
                     </div>
                 `;
             }
-            if (additionalServices) additionalServices.style.display = 'block';
-            break;
-
-        case 'office-repair':
-            areaSection.style.display = 'block';
-            if (serviceList) {
-                serviceList.innerHTML = `
-                    <div class="checkbox-item">
-                        <input type="checkbox" id="extra-sanuzel" name="sanuzel">
-                        <label for="extra-sanuzel">Санузел</label>
-                    </div>
-                    <div class="checkbox-item">
-                        <input type="checkbox" id="extra-electrical" name="electrical">
-                        <label for="extra-electrical">Электромонтажные работы</label>
-                    </div>
-                    <div class="checkbox-item">
-                        <input type="checkbox" id="extra-replanning" name="replanning">
-                        <label for="extra-replanning">Перепланировка</label>
-                    </div>
-                    <div class="checkbox-item">
-                        <input type="checkbox" id="extra-heating" name="heating">
-                        <label for="extra-heating">Отопление</label>
-                    </div>
-                `;
-            }
-            if (additionalServices) additionalServices.style.display = 'block';
-            break;
+            
+            serviceList.innerHTML = html;
+            additionalServices.style.display = 'block';
+        }
     }
-
+    
     calculatePrice();
 }
 
+// ===== РАСЧЕТ ЦЕНЫ =====
 function calculatePrice() {
     const area = parseFloat(document.getElementById('area')?.value) || 0;
     const service = document.getElementById('serviceType')?.value;
     const resultPrice = document.getElementById('resultPrice');
     
-    if (!resultPrice) return;
+    if (!resultPrice || !service) return;
     
     let total = 0;
 
-    if (area > 0 && service) {
+    if (area > 0) {
         if (service === 'repair-apartment') {
             total = area * 2.5 * 2000 - 0.07 * area * 2000;
             if (document.getElementById('extra-sanuzel')?.checked) total += 20000 * area * 0.07;
@@ -673,20 +547,21 @@ function calculatePrice() {
         }
     }
 
-    // Анимация цены
+    // Анимация обновления цены
     const oldPrice = parseFloat(resultPrice.getAttribute('data-current') || 0);
-    const step = (total - oldPrice) / 20;
+    const step = (total - oldPrice) / 10;
     let current = oldPrice;
 
-    if (Math.abs(step) > 0.1) {
-        const anim = setInterval(() => {
+    if (Math.abs(step) > 1) {
+        clearInterval(window.priceAnimation);
+        window.priceAnimation = setInterval(() => {
             current += step;
             if ((step > 0 && current >= total) || (step < 0 && current <= total)) {
                 current = total;
-                clearInterval(anim);
+                clearInterval(window.priceAnimation);
             }
             resultPrice.textContent = Math.round(current).toLocaleString('ru-RU') + ' ₽';
-        }, 20);
+        }, 30);
     } else {
         resultPrice.textContent = total.toLocaleString('ru-RU') + ' ₽';
     }
@@ -694,39 +569,53 @@ function calculatePrice() {
     resultPrice.setAttribute('data-current', total);
 }
 
-// ===== АНИМАЦИИ ПРИ СКРОЛЛЕ =====
-function animateOnScroll() {
-    const observer = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) {
-                entry.target.classList.add('animate-in');
-                observer.unobserve(entry.target);
-            }
+// ===== ФОРМЫ =====
+function initForms() {
+    const callForm = document.getElementById('callForm');
+    if (callForm) {
+        callForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const submitBtn = this.querySelector('.submit-btn');
+            if (!submitBtn) return;
+            
+            const originalHTML = submitBtn.innerHTML;
+            
+            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Отправка...';
+            submitBtn.disabled = true;
+            
+            // Имитация отправки
+            setTimeout(() => {
+                submitBtn.innerHTML = '<i class="fas fa-check"></i> Отправлено!';
+                submitBtn.style.background = '#10b981';
+                
+                setTimeout(() => {
+                    this.reset();
+                    submitBtn.innerHTML = originalHTML;
+                    submitBtn.disabled = false;
+                    submitBtn.style.background = '';
+                    closeCallForm();
+                }, 2000);
+            }, 1500);
         });
-    }, { threshold: 0.1 });
-
-    document.querySelectorAll('.content-block, .stat-item, .portfolio-item, .process-step').forEach(block => {
-        if (!block.classList.contains('animate-in')) {
-            observer.observe(block);
-        }
-    });
+    }
 }
 
-// ===== ПЛАВНЫЕ ЯКОРНЫЕ ССЫЛКИ =====
+// ===== ПЛАВНЫЙ СКРОЛЛ =====
 function initSmoothScroll() {
     document.querySelectorAll('a[href^="#"]').forEach(anchor => {
         anchor.addEventListener('click', function(e) {
             const href = this.getAttribute('href');
-            if (href === '#' || href === '') return;
+            if (!href || href === '#') return;
             
-            const targetElement = document.querySelector(href);
-            if (targetElement) {
+            const target = document.querySelector(href);
+            if (target) {
                 e.preventDefault();
-                const offset = window.innerWidth <= 768 ? 80 : 100;
-                const targetPosition = targetElement.getBoundingClientRect().top + window.pageYOffset - offset;
+                const offset = window.innerWidth <= 768 ? 70 : 100;
+                const position = target.getBoundingClientRect().top + window.pageYOffset - offset;
                 
                 window.scrollTo({
-                    top: targetPosition,
+                    top: position,
                     behavior: 'smooth'
                 });
             }
@@ -734,67 +623,20 @@ function initSmoothScroll() {
     });
 }
 
-// ===== ОСНОВНАЯ ИНИЦИАЛИЗАЦИЯ =====
-document.addEventListener('DOMContentLoaded', () => {
-    console.log('🚀 Инициализация сайта...');
-    
-    // 1. Добавляем динамические стили
-    addMobileStyles();
-    
-    // 2. Инициализируем мобильную шапку
-    initMobileHeader();
-    
-    // 3. Инициализируем модальные окна
-    initModalClose();
-    
-    // 4. Инициализируем формы
-    initForms();
-    
-    // 5. Инициализируем плавный скролл
-    initSmoothScroll();
-    
-    // 6. Инициализируем калькулятор
-    const serviceType = document.getElementById('serviceType');
-    const areaInput = document.getElementById('area');
-    
-    if (serviceType) {
-        serviceType.addEventListener('change', updateService);
-    }
-    
-    if (areaInput) {
-        areaInput.addEventListener('input', calculatePrice);
-    }
-    
-    // Инициализация опций материала
-    document.addEventListener('click', function(e) {
-        if (e.target.classList.contains('option-item')) {
-            document.querySelectorAll('.option-item').forEach(i => i.classList.remove('selected'));
-            e.target.classList.add('selected');
-            calculatePrice();
-        }
-        
-        // Обновление цены при изменении чекбоксов
-        if (e.target.type === 'checkbox' && e.target.closest('#serviceList')) {
-            calculatePrice();
-        }
+// ===== АНИМАЦИИ =====
+function initAnimations() {
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('animate-in');
+            }
+        });
+    }, { threshold: 0.1 });
+
+    document.querySelectorAll('.content-block, .process-step').forEach(el => {
+        observer.observe(el);
     });
-    
-    // 7. Анимации при скролле
-    animateOnScroll();
-    
-    // 8. Инициализация карусели клиентов (если есть)
-    initClientsCarousel();
-    
-    // 9. Показываем основную шапку
-    setTimeout(() => {
-        const mainHeader = document.getElementById('mainHeader');
-        if (mainHeader) {
-            mainHeader.classList.add('visible');
-        }
-    }, 100);
-    
-    console.log('✅ Инициализация завершена');
-});
+}
 
 // ===== КАРУСЕЛЬ КЛИЕНТОВ =====
 function initClientsCarousel() {
@@ -806,47 +648,101 @@ function initClientsCarousel() {
     if (!slides || !prevBtn || !nextBtn) return;
 
     let currentIndex = 0;
-    const totalSlides = 8;
+    const totalSlides = document.querySelectorAll('.partner-slide').length || 8;
 
     function updateCarousel() {
         slides.style.transform = `translateX(-${currentIndex * 100}%)`;
         indicators.forEach((indicator, index) => {
-            indicator.classList.toggle('active', index === currentIndex);
+            if (indicator) {
+                indicator.classList.toggle('active', index === currentIndex);
+            }
         });
     }
 
-    prevBtn.addEventListener('click', () => {
-        currentIndex = (currentIndex - 1 + totalSlides) % totalSlides;
-        updateCarousel();
-    });
-
-    nextBtn.addEventListener('click', () => {
-        currentIndex = (currentIndex + 1) % totalSlides;
-        updateCarousel();
-    });
-
-    indicators.forEach(indicator => {
-        indicator.addEventListener('click', () => {
-            currentIndex = parseInt(indicator.dataset.index, 10);
+    if (prevBtn) {
+        prevBtn.addEventListener('click', () => {
+            currentIndex = (currentIndex - 1 + totalSlides) % totalSlides;
             updateCarousel();
         });
+    }
+
+    if (nextBtn) {
+        nextBtn.addEventListener('click', () => {
+            currentIndex = (currentIndex + 1) % totalSlides;
+            updateCarousel();
+        });
+    }
+
+    indicators.forEach(indicator => {
+        if (indicator) {
+            indicator.addEventListener('click', () => {
+                currentIndex = parseInt(indicator.dataset.index, 10) || 0;
+                updateCarousel();
+            });
+        }
     });
 
-    // Автоматическая смена слайдов
+    // Автопрокрутка
     setInterval(() => {
         currentIndex = (currentIndex + 1) % totalSlides;
         updateCarousel();
     }, 5000);
 }
 
-// ===== ОБРАБОТЧИК ОШИБОК =====
-window.addEventListener('error', function(e) {
-    console.error('Ошибка JavaScript:', e.error);
-    console.error('В файле:', e.filename);
-    console.error('Строка:', e.lineno);
+// ===== ОСНОВНАЯ ИНИЦИАЛИЗАЦИЯ =====
+document.addEventListener('DOMContentLoaded', () => {
+    console.log('🚀 Инициализация сайта РеалСтрой...');
+    
+    // 1. Мобильная адаптация
+    addMobileStyles();
+    initMobileMenu();
+    
+    // 2. Основные функции
+    initModalClose();
+    initForms();
+    initSmoothScroll();
+    initAnimations();
+    
+    // 3. Инициализация калькулятора
+    const serviceType = document.getElementById('serviceType');
+    const areaInput = document.getElementById('area');
+    
+    if (serviceType) {
+        serviceType.addEventListener('change', updateService);
+    }
+    
+    if (areaInput) {
+        areaInput.addEventListener('input', calculatePrice);
+    }
+    
+    // Клики по опциям
+    document.addEventListener('click', function(e) {
+        if (e.target.classList.contains('option-item')) {
+            document.querySelectorAll('.option-item').forEach(i => i.classList.remove('selected'));
+            e.target.classList.add('selected');
+            calculatePrice();
+        }
+        
+        if (e.target.type === 'checkbox' && e.target.closest('#serviceList')) {
+            calculatePrice();
+        }
+    });
+    
+    // 4. Дополнительные модули
+    initClientsCarousel();
+    
+    // 5. Показ шапки
+    setTimeout(() => {
+        const mainHeader = document.getElementById('mainHeader');
+        if (mainHeader) {
+            mainHeader.classList.add('visible');
+        }
+    }, 100);
+    
+    console.log('✅ Инициализация завершена');
 });
 
-// Экспортируем функции для глобального использования
+// ===== ГЛОБАЛЬНЫЕ ФУНКЦИИ =====
 window.openCalculator = openCalculator;
 window.closeCalculator = closeCalculator;
 window.openCallForm = openCallForm;
